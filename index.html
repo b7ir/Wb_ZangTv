@@ -121,7 +121,7 @@ nav{background:rgba(10,10,26,.97);backdrop-filter:blur(20px);border-bottom:1px s
 .pass-screen{padding:2.2rem 1.4rem;text-align:center}
 .pass-screen h3{font-size:1.05rem;margin-bottom:1.1rem;color:var(--gold);direction:rtl}
 .pass-input{background:var(--card);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-size:.88rem;font-family:'Outfit',sans-serif;outline:none;width:100%;max-width:280px;text-align:center;margin-bottom:.9rem}
-.pass-btn{background:linear-gradient(135deg,var(--gold),#d97706);border:none;color:#000;padding:8px 28px;border-radius:9px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
+.pass-btn{background:linear-gradient(135deg,var(--gold),#d97706);border:none;color:#000;padding:8px 28px;border-radius:99px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
 .pass-err{color:#ef4444;font-size:.77rem;margin-top:.5rem}
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.1rem 1.2rem;text-align:center}
 .footer-logo{font-size:.95rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.35rem}
@@ -264,14 +264,14 @@ footer p{color:var(--muted);font-size:.7rem}
 const CHANNELS=[
   // NEWS
   {id:'newline',name:'Newline',cat:'News',live:1,viewers:'9.2K',color:'#0d47a1',hd:1,country:'🇮🇶 Iraq',
-   logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Newline_TV_logo.svg/200px-Newline_TV_logo.svg.png',
-   m3u8:'https://newlinetv.net/hls/newline.m3u8'},
+   logo:'https://i.ibb.co/7XkRXqW/newline.png',
+   m3u8:'https://6476e46b58f91.streamlock.net/liveTrans/SHOWS123/chunklist_w472715186.m3u8'},
   {id:'rudaw',name:'Rudaw',cat:'News',live:1,viewers:'18.4K',color:'#c2410c',hd:1,country:'🇮🇶 Iraq',
    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Rudaw_Media_Network_logo.svg/200px-Rudaw_Media_Network_logo.svg.png',
-   m3u8:'https://stream.rudaw.net/live/rudawtv/rudawtv.m3u8'},
+   m3u8:'https://svs.itworkscdn.net/rudawlive/rudawlive.smil/playlist.m3u8'},
   {id:'k24',name:'Kurdistan 24',cat:'News',live:1,viewers:'14.1K',color:'#1e3a8a',hd:1,country:'🇮🇶 Iraq',
    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Kurdistan_24_Logo.svg/200px-Kurdistan_24_Logo.svg.png',
-   m3u8:'https://k24live-lh.akamaihd.net/i/k24live_1@326786/master.m3u8'},
+   m3u8:'https://d1x82nydcxndze.cloudfront.net/live/index_720p25.m3u8'},
   {id:'ktv',name:'Kurdistan TV',cat:'News',live:1,viewers:'8.9K',color:'#7c3aed',hd:1,country:'🇮🇶 Iraq',
    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Kurdistan_TV_logo.svg/200px-Kurdistan_TV_logo.svg.png',
    m3u8:'https://live.ktv.iq:8443/ktv/ktv.m3u8'},
@@ -282,7 +282,9 @@ const CHANNELS=[
    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Zagros_TV_logo.svg/200px-Zagros_TV_logo.svg.png',
    m3u8:'https://live.sagron.net:8443/zagrostv/zagrostv.m3u8'},
   {id:'kirkuk',name:'Kirkuk TV',cat:'News',live:1,viewers:'4.1K',color:'#0369a1',hd:1,country:'🇮🇶 کەرکووک',
-   logo:'',m3u8:'https://kirkouk-tv.com/hls/live.m3u8'},
+   logo:'https://i.ibb.co/Xz9R5QG/kirkuk.png',m3u8:'https://live.kirkuklive.live/hls/stream/index.m3u8'},
+  {id:'speda',name:'Speda',cat:'News',live:1,viewers:'5.4K',color:'#047857',hd:1,country:'🇮🇶 Iraq',
+   logo:'https://i.ibb.co/0Vp8zMv/speda.png',m3u8:'http://kurd-live.com:1935/live/speda/playlist.m3u8'},
   {id:'shawoo',name:'Shawoo TV — شەوۆ',cat:'News',live:1,viewers:'3.8K',color:'#4f46e5',hd:1,country:'🇮🇶 Iraq',
    logo:'',m3u8:''},
   {id:'mbc',name:'MBC',cat:'News',live:1,viewers:'22K',color:'#1f2937',hd:1,country:'🇸🇦 KSA',
@@ -298,12 +300,12 @@ const CHANNELS=[
    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/BeIN_Sports_2.svg/200px-BeIN_Sports_2.svg.png',
    m3u8:''},
   // MUSIC
-  {id:'ava',name:'AVA Media',cat:'Music',live:1,viewers:'6.9K',color:'#6d28d9',hd:1,country:'🇮🇶 Iraq',
-   logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Ava_media_logo.png/200px-Ava_media_logo.png',
-   m3u8:''},
+  {id:'ava',name:'Ava TV',cat:'Music',live:1,viewers:'6.9K',color:'#6d28d9',hd:1,country:'🇮🇶 Iraq',
+   logo:'https://i.ibb.co/6yLxwM7/ava.png',
+   m3u8:'https://familyhls.avatv.live/hls/stream.m3u8'},
   {id:'kurdmax',name:'Kurdmax',cat:'Music',live:1,viewers:'7.4K',color:'#7c3aed',hd:1,country:'🇮🇶 Iraq',
-   logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kurdmax_logo.jpg/200px-Kurdmax_logo.jpg',
-   m3u8:'https://live.kurdmax.com/hls/kurdmax.m3u8'},
+   logo:'https://i.ibb.co/3kXm6yv/kurdmax.png',
+   m3u8:'https://6476e46b58f91.streamlock.net/liveTrans/KURDB3388/chunklist_w2060950536.m3u8'},
   {id:'goodmax',name:'GoodMax',cat:'Music',live:1,viewers:'5.1K',color:'#be185d',hd:1,country:'🇮🇶 Iraq',
    logo:'',m3u8:''},
   {id:'ziaf',name:'Ziaf TV — زیاف',cat:'Music',live:1,viewers:'4.3K',color:'#0891b2',hd:1,country:'🇮🇶 Iraq',
@@ -313,10 +315,17 @@ const CHANNELS=[
    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Channel_8_Kurdistan.svg/200px-Channel_8_Kurdistan.svg.png',
    m3u8:''},
   {id:'kurdsat',name:'Kurdsat',cat:'Movies',live:1,viewers:'6.5K',color:'#1e3a8a',hd:1,country:'🇮🇶 Iraq',
-   logo:'',m3u8:''},
+   logo:'https://i.ibb.co/Qf9vN5F/kurdsat.png',m3u8:'http://198.100.158.231:1935/kanal11/_definst_/livestream/playlist.m3u8'},
+  {id:'nettv',name:'Net TV',cat:'Movies',live:1,viewers:'8.2K',color:'#7c3aed',hd:1,country:'🇮🇶 Iraq',
+   logo:'https://i.ibb.co/VqhR3Cg/nettv.png',m3u8:'http://198.100.158.231:1935/kanal12/_definst_/livestream/playlist.m3u8'},
+  {id:'waar',name:'Waar TV',cat:'Movies',live:1,viewers:'6.2K',color:'#3b82f6',hd:1,country:'🇮🇶 Iraq',
+   logo:'https://i.ibb.co/3mN9hXh/waar.png',m3u8:'https://live.kwikmotion.com/waarmedialive/waarmedia.smil/playlist.m3u8'},
   // KIDS
   {id:'kkids',name:'Kurdistan Kids',cat:'Kids',live:1,viewers:'3.4K',color:'#0891b2',hd:0,country:'🇮🇶 Iraq',
    logo:'',m3u8:''},
+  {id:'pelsat',name:'Pelsat',cat:'Kids',live:1,viewers:'3.1K',color:'#0891b2',hd:1,country:'🇮🇶 Iraq',
+   logo:'https://i.ibb.co/X3mN9hX/pelsat.png',
+   m3u8:'https://65f16f0fdfc51.streamlock.net:443/afarinTV/livestream/playlist.m3u8'}
 ];
 
 const DEFAULT_SOCIALS=[
