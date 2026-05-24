@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZangTV — پەخشی ڕاستەوخۆی کەناڵە کوردییەکان</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.14/dist/hls.min.js"></script>
+<style>
+:root {
+  --primary:#8b5cf6; --primary-dark:#7c3aed;
+  --bg:#050510; --card:#101028;
+  --border:rgba(255,255,255,0.08);
+  --muted:#64748b; --accent:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:#fff;font-family:'Outfit','Noto Sans Arabic',sans-serif;min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:1000;
+  height:64px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;
+  background:rgba(5,5,16,0.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-size:1.4rem;font-weight:900;letter-spacing:1px;
+  background:linear-gradient(135deg,#a78bfa,#60a5fa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer;
+}
+.nav-links{display:flex;gap:6px;}
+.nav-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:10px;border:none;
+  background:transparent;color:var(--muted);
+  cursor:pointer;font-size:0.85rem;font-weight:600;
+  transition:all 0.2s;font-family:inherit;
+}
+.nav-btn:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.nav-btn.active{background:rgba(139,92,246,0.18);color:#c4b5fd;}
+.nav-btn.admin-btn{color:#f59e0b;}
+.nav-btn.admin-btn:hover{background:rgba(245,158,11,0.12);}
+
+/* ── PAGES ── */
+.page{display:none;}.page.active{display:block;}
+
+/* ── HERO ── */
+.hero{
+  padding:48px 5% 36px;text-align:center;
+  background:radial-gradient(ellipse at top,rgba(109,40,217,0.18) 0%,transparent 70%);
+  border-bottom:1px solid var(--border);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:999px;
+  border:1px solid rgba(139,92,246,0.3);
+  background:rgba(139,92,246,0.08);
+  font-size:0.75rem;color:#c4b5fd;font-weight:600;margin-bottom:16px;
+}
+.live-dot{width:8px;height:8px;background:#ef4444;border-radius:50%;animation:pulse 1.2s infinite;}
+.hero h1{font-size:clamp(1.5rem,4vw,2.4rem);font-weight:900;line-height:1.3;margin-bottom:24px;}
+.hero h1 span{background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ── SEARCH ── */
+.search-wrap{position:relative;max-width:480px;margin:0 auto 28px;}
+.search-wrap svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none;}
+.search-input{
+  width:100%;padding:13px 46px 13px 18px;
+  border-radius:14px;border:1px solid var(--border);
+  background:var(--card);color:#fff;
+  font-size:0.9rem;font-family:inherit;outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.search-input:focus{border-color:rgba(139,92,246,0.5);box-shadow:0 0 0 3px rgba(139,92,246,0.1);}
+
+/* ── CATEGORIES ── */
+.cats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.cat-btn{
+  padding:7px 18px;border-radius:10px;
+  border:1px solid var(--border);background:var(--card);
+  color:var(--muted);cursor:pointer;font-size:0.82rem;font-weight:600;
+  font-family:inherit;transition:all 0.2s;
+}
+.cat-btn:hover{border-color:rgba(139,92,246,0.4);color:#fff;background:rgba(139,92,246,0.1);}
+.cat-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* ── GRID ── */
+.container{padding:28px 5%;max-width:1280px;margin:0 auto;}
+.section-label{
+  display:flex;align-items:center;gap:10px;
+  font-size:0.75rem;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:18px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:16px;}
+.ch-card{
+  background:var(--card);border-radius:16px;
+  border:1px solid var(--border);overflow:hidden;
+  cursor:pointer;transition:all 0.25s;position:relative;
+}
+.ch-card:hover{transform:translateY(-6px);border-color:rgba(139,92,246,0.5);box-shadow:0 12px 32px rgba(0,0,0,0.5);}
+.ch-card.playing{border-color:var(--primary);box-shadow:0 0 0 2px rgba(139,92,246,0.3);}
+.ch-img-box{
+  height:110px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0f0f28,#1a1a3e);position:relative;
+}
+.ch-logo{width:72px;height:72px;object-fit:contain;}
+.ch-initial{font-size:1.6rem;font-weight:900;opacity:0.4;}
+.live-tag{
+  position:absolute;top:8px;right:8px;
+  background:var(--accent);color:#fff;
+  font-size:0.6rem;font-weight:800;letter-spacing:0.5px;
+  padding:3px 8px;border-radius:6px;
+  display:flex;align-items:center;gap:4px;
+}
+.fav-btn{
+  position:absolute;top:8px;left:8px;
+  background:rgba(0,0,0,0.5);border:none;
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);font-size:0.85rem;
+  transition:all 0.2s;
+}
+.fav-btn:hover,.fav-btn.active{color:#ef4444;}
+.ch-info{padding:12px 14px;}
+.ch-name{font-weight:700;font-size:0.88rem;margin-bottom:4px;line-height:1.3;}
+.ch-cat{font-size:0.7rem;color:var(--muted);background:rgba(255,255,255,0.04);padding:2px 8px;border-radius:5px;display:inline-block;}
+
+/* ── PLAYER MODAL ── */
+#player-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:2000;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-close{
+  position:absolute;top:20px;right:20px;
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(255,255,255,0.08);border:none;
+  color:#fff;font-size:1.3rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;
+}
+.modal-close:hover{background:rgba(255,255,255,0.15);}
+.player-header{text-align:center;margin-bottom:16px;}
+.player-title{font-size:1.1rem;font-weight:700;}
+.player-meta{font-size:0.75rem;color:var(--muted);margin-top:4px;}
+.player-live{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);
+  color:#fca5a5;font-size:0.7rem;font-weight:700;letter-spacing:1px;
+  padding:4px 12px;border-radius:8px;margin-top:8px;
+}
+.video-wrap{
+  width:100%;max-width:900px;border-radius:14px;
+  overflow:hidden;border:1px solid rgba(255,255,255,0.1);
+  background:#000;aspect-ratio:16/9;position:relative;
+}
+video{width:100%;height:100%;display:block;}
+.vid-spinner{
+  position:absolute;inset:0;background:rgba(0,0,0,0.8);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+}
+.vid-spinner.hide{display:none;}
+.spinner-ring{
+  width:36px;height:36px;border-radius:50%;
+  border:3px solid rgba(255,255,255,0.1);border-top-color:var(--primary);
+  animation:spin 0.8s linear infinite;
+}
+.vid-err{
+  position:absolute;inset:0;background:rgba(5,5,16,0.96);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;text-align:center;padding:24px;
+}
+.vid-err svg{opacity:0.3;margin-bottom:4px;}
+.vid-err h4{font-size:0.9rem;font-weight:700;color:#94a3b8;}
+.vid-err p{font-size:0.75rem;color:var(--muted);}
+
+/* ── ABOUT ── */
+.about-section{padding:60px 5%;text-align:center;max-width:700px;margin:0 auto;}
+.about-section h2{font-size:2rem;font-weight:900;margin-bottom:12px;}
+.about-section p{color:var(--muted);margin-bottom:32px;}
+.social-links{display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto;}
+.social-link{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 20px;border-radius:14px;
+  background:var(--card);border:1px solid var(--border);
+  transition:all 0.2s;font-weight:600;font-size:0.9rem;
+}
+.social-link:hover{border-color:rgba(139,92,246,0.4);background:rgba(139,92,246,0.08);}
+.social-icon{font-size:1.3rem;}
+
+/* ── ADMIN ── */
+.admin-wrap{padding:40px 5%;max-width:680px;margin:0 auto;}
+.admin-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;}
+.admin-card h3{font-size:1rem;font-weight:700;margin-bottom:6px;}
+.admin-card p{font-size:0.8rem;color:var(--muted);margin-bottom:24px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-group label{display:block;font-size:0.72rem;color:var(--muted);font-weight:600;letter-spacing:0.5px;margin-bottom:6px;}
+.form-input{
+  width:100%;padding:11px 14px;
+  border-radius:10px;border:1px solid var(--border);
+  background:var(--bg);color:#fff;
+  font-family:inherit;font-size:0.85rem;outline:none;
+  transition:border-color 0.2s;
+}
+.form-input:focus{border-color:rgba(139,92,246,0.5);}
+.form-input.full{grid-column:1/-1;}
+.btn-primary{
+  width:100%;padding:12px;border-radius:12px;border:none;
+  background:var(--primary);color:#fff;
+  font-weight:700;font-size:0.9rem;font-family:inherit;
+  cursor:pointer;transition:background 0.2s;margin-top:8px;
+}
+.btn-primary:hover{background:var(--primary-dark);}
+.ch-list-admin{margin-top:24px;border-top:1px solid var(--border);padding-top:24px;}
+.ch-list-admin h4{font-size:0.8rem;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;}
+.admin-ch-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.02);margin-bottom:8px;
+}
+.admin-ch-name{font-size:0.85rem;font-weight:600;}
+.btn-del{
+  background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);
+  color:#f87171;padding:5px 12px;border-radius:8px;
+  cursor:pointer;font-size:0.75rem;font-weight:700;font-family:inherit;
+  transition:all 0.2s;
+}
+.btn-del:hover{background:rgba(239,68,68,0.2);}
+
+/* ── EMPTY ── */
+.empty-state{
+  text-align:center;padding:60px 20px;
+  color:var(--muted);grid-column:1/-1;
+}
+.empty-state svg{opacity:0.2;margin:0 auto 16px;display:block;}
+
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+@media(max-width:600px){
+  .ch-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .hero{padding:32px 4% 24px;}
+  nav{padding:0 4%;}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="logo" onclick="switchPage('home')">ZangTV</div>
+  <div class="nav-links">
+    <button class="nav-btn active" id="nav-home" onclick="switchPage('home')">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      ماڵپەڕ
+    </button>
+    <button class="nav-btn" id="nav-about" onclick="switchPage('about')">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      دەربارە
+    </button>
+    <button class="nav-btn admin-btn" id="nav-admin" onclick="switchPage('admin')">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+      ئەدمین
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ PAGE: HOME ═══ -->
+<div id="p-home" class="page active">
+  <div class="hero">
+    <div class="hero-badge">
+      <span class="live-dot"></span>
+      ڕاستەوخۆ تەماشا بکە · ٢٤ کاتژمێر
+    </div>
+    <h1>هەموو کەناڵە کوردییەکان<br><span>لە یەک پلاتفۆرمدا</span></h1>
+    <div class="search-wrap">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" type="text" id="search-input" placeholder="گەڕان بکە بۆ ناوی کەناڵ..." oninput="renderGrid()">
+    </div>
+    <div class="cats">
+      <button class="cat-btn active" onclick="setCat('All',this)">هەمووی</button>
+      <button class="cat-btn" onclick="setCat('News',this)">هەواڵ</button>
+      <button class="cat-btn" onclick="setCat('Sports',this)">وەرزش</button>
+      <button class="cat-btn" onclick="setCat('Movies',this)">فیلم</button>
+      <button class="cat-btn" onclick="setCat('Music',this)">موزیک</button>
+      <button class="cat-btn" onclick="setCat('Kids',this)">منداڵان</button>
+      <button class="cat-btn" onclick="setCat('General',this)">گشتی</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section-label">کەناڵەکان</div>
+    <div class="ch-grid" id="main-grid"></div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: ABOUT ═══ -->
+<div id="p-about" class="page">
+  <div class="about-section">
+    <h2>دەربارەی ZangTV</h2>
+    <p>پلاتفۆرمێکی سەربەخۆیە بۆ کۆکردنەوەی پەخشی ڕاستەوخۆی کەناڵە کوردییەکان بە کوالیتی بەرز و بەبێ ڕیکلام.</p>
+    <div class="social-links">
+      <a href="#" class="social-link"><span class="social-icon">📸</span> Instagram: @ZangTV.krd</a>
+      <a href="#" class="social-link"><span class="social-icon">✈️</span> Telegram: t.me/ZangTV</a>
+      <a href="#" class="social-link"><span class="social-icon">📘</span> Facebook: ZangTV Official</a>
+      <a href="#" class="social-link"><span class="social-icon">▶️</span> YouTube: ZangTV Channel</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: ADMIN ═══ -->
+<div id="p-admin" class="page">
+  <div class="admin-wrap">
+    <div class="admin-card">
+      <h3>⚙️ زیادکردنی کەناڵی نوێ</h3>
+      <p>زانیاری کەناڵ بنووسە و زیاد بکە.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>ناوی کەناڵ (کوردی)</label>
+          <input class="form-input" id="a-nameKu" type="text" placeholder="ڕووداو">
+        </div>
+        <div class="form-group">
+          <label>Channel Name (EN)</label>
+          <input class="form-input" id="a-name" type="text" placeholder="Rudaw TV">
+        </div>
+        <div class="form-group">
+          <label>جۆری کەناڵ</label>
+          <select class="form-input" id="a-cat">
+            <option value="News">هەواڵ</option>
+            <option value="Sports">وەرزش</option>
+            <option value="Movies">فیلم</option>
+            <option value="Music">موزیک</option>
+            <option value="Kids">منداڵان</option>
+            <option value="General" selected>گشتی</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>وڵات</label>
+          <input class="form-input" id="a-country" type="text" placeholder="Kurdistan">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label>بەستەری Stream (.m3u8)</label>
+        <input class="form-input" id="a-src" type="text" placeholder="https://stream.example.com/live.m3u8">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label>لۆگۆ URL (ئارەزوومەند)</label>
+        <input class="form-input" id="a-logo" type="text" placeholder="https://example.com/logo.png">
+      </div>
+      <button class="btn-primary" onclick="addChannel()">
+        + زیادکردنی کەناڵ
+      </button>
+
+      <div class="ch-list-admin">
+        <h4>کەناڵەکان</h4>
+        <div id="admin-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PLAYER MODAL ═══ -->
+<div id="player-modal">
+  <button class="modal-close" onclick="closePlayer()">✕</button>
+  <div class="player-header">
+    <div class="player-title" id="modal-title">—</div>
+    <div class="player-meta" id="modal-meta">—</div>
+    <div class="player-live"><span class="live-dot"></span> LIVE · 24/7</div>
+  </div>
+  <div class="video-wrap">
+    <video id="vid" controls autoplay playsinline></video>
+    <div class="vid-spinner" id="vid-spinner">
+      <div class="spinner-ring"></div>
+      <p style="font-size:0.8rem;color:#94a3b8;">باردەکرێت...</p>
+    </div>
+    <div class="vid-err" id="vid-err">
+      <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0119 12.55M5 5a10.94 10.94 0 0114.08 1.37M10.71 5.05A11 11 0 0122.56 9M1.42 9a11 11 0 014.7-2.88M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+      <h4>کەناڵەکە ئێستا بەردەست نییە</h4>
+      <p>ئەم پەخشەرە ئێستا داخراوە یان بەستەرەکەی گۆڕاوە.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  CHANNELS DATABASE — ZangTV 2026
+// ══════════════════════════════════════════════
+const DEFAULT_CHANNELS = [
+  // ── کوردی هەواڵ ──
+  {
+    id:'rudaw', nameKu:'ڕووداو', name:'Rudaw TV',
+    cat:'News', live:true, color:'#da251d', country:'Kurdistan',
+    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Rudaw_Media_Network_logo.svg/200px-Rudaw_Media_Network_logo.svg.png',
+    src:'https://stream.rudaw.net/live/rudawtv/rudawtv.m3u8'
+  },
+  {
+    id:'k24', nameKu:'کوردستان ٢٤', name:'Kurdistan 24',
+    cat:'News', live:true, color:'#0055a4', country:'Kurdistan',
+    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Kurdistan_24_Logo.svg/200px-Kurdistan_24_Logo.svg.png',
+    src:'https://k24live-lh.akamaihd.net/i/k24live_1@326786/master.m3u8'
+  },
+  {
+    id:'nrt1', nameKu:'ئێن ئاڕ تی', name:'NRT 1',
+    cat:'News', live:true, color:'#dc2626', country:'Kurdistan',
+    logo:'https://upload.wikimedia.org/wikipedia/commons/5/52/NRT_TV_logo.png',
+    src:'https://nrt.watch:8443/stream/nrt-main/playlist.m3u8'
+  },
+  {
+    id:'nrt2', nameKu:'ئێن ئاڕ تی ٢', name:'NRT 2',
+    cat:'General', live:true, color:'#e11d48', country:'Kurdistan',
+    logo:'https://upload.wikimedia.org/wikipedia/commons/5/52/NRT_TV_logo.png',
+    src:'https://nrt.watch:8443/stream/nrt2/playlist.m3u8'
+  },
+  {
+    id:'ktv', nameKu:'کوردستان تیڤی', name:'Kurdistan TV',
+    cat:'News', live:true, color:'#f59e0b', country:'Kurdistan',
+    logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Kurdistan_TV_logo.svg/200px-Kurdistan_TV_logo.svg.png',
+    src:'https://live.ktv.iq:8443/ktv/ktv.m3u8'
+  },
+  {
+    id:'kurdsat', nameKu:'کوردسات نیوز', name:'KurdSat News',
+    cat:'News', live:true, color:'#6d28d9', country:'Kurdistan',
+    logo:'https://upload.wikimedia.org/wikipedia/commons/2/23/Kurdsat_Logo_2022.png',
+    src:'http://kurdsat.vion.tv/hls/kurdsat_news_hd.m3u8'
+  },
+  // ── ژاڤا میدیا ──
+  {
+    id:'java', nameKu:'ژاڤا میدیا', name:'Java Media',
+    cat:'General', live:true, color:'#0891b2', country:'Kurdistan',
+    src:'https://live.javamedia.tv/hls/live.m3u8'
+  },
+  // ── عەرەبی هەواڵ ──
+  {
+    id:'aljazeera', nameKu:'الجزيرة', name:'Al Jazeera',
+    cat:'News', live:true, color:'#d4a017', country:'Qatar',
+    src:'https://live-fta-gp.akamaized.net/v1/master/72662a677e436214219463cb9cf6b8764032d88c/aljazeera-arabic/master.m3u8'
+  },
+  {
+    id:'arabiya', nameKu:'العربية', name:'Al Arabiya',
+    cat:'News', live:true, color:'#0d47a1', country:'Saudi Arabia',
+    src:'https://mbc-arabiya-apple-live.akamaized.net/apple/arabiya/index.m3u8'
+  },
+  {
+    id:'hadath', nameKu:'الحدث', name:'Al Hadath',
+    cat:'News', live:true, color:'#1a3a5c', country:'Saudi Arabia',
+    src:'https://mbc-hadath-apple-live.akamaized.net/apple/hadath/index.m3u8'
+  },
+  // ── وەرزش ──
+  {
+    id:'bein1', nameKu:'بین سپۆرتس ١', name:'beIN Sports 1',
+    cat:'Sports', live:true, color:'#6d28d9', country:'Qatar',
+    src:'https://pub-84d5f3d453b3423789b53fa91bb26493.r2.dev/epg/bein1.m3u8'
+  },
+  {
+    id:'bein2', nameKu:'بین سپۆرتس ٢', name:'beIN Sports 2',
+    cat:'Sports', live:true, color:'#7c3aed', country:'Qatar',
+    src:'https://pub-84d5f3d453b3423789b53fa91bb26493.r2.dev/epg/bein2.m3u8'
+  },
+  {
+    id:'realmadrid', nameKu:'ڕیاڵ مەدرید تیڤی', name:'Real Madrid TV',
+    cat:'Sports', live:true, color:'#1e3a8a', country:'Spain',
+    src:'https://madridtv-claro-es.amagi.tv/playlist.m3u8'
+  },
+  // ── فیلم ──
+  {
+    id:'mbc2', nameKu:'ئیم بی سی ٢', name:'MBC 2',
+    cat:'Movies', live:true, color:'#0369a1', country:'KSA',
+    src:'https://shls-live-ak.shakaplayr.com/live/mbc2_AR/index.m3u8'
+  },
+  // ── گشتی ──
+  {
+    id:'waar', nameKu:'واڕ تیڤی', name:'Waar TV',
+    cat:'General', live:true, color:'#4f46e5', country:'Kurdistan',
+    logo:'https://upload.wikimedia.org/wikipedia/commons/e/e0/Waar_TV_Logo.png',
+    src:'http://waar.vion.tv/hls/waar_hd.m3u8'
+  },
+];
+
+// ══ STATE ══
+let channels = [...DEFAULT_CHANNELS];
+let favs = JSON.parse(localStorage.getItem('ztv_favs')||'[]');
+let activeCat = 'All';
+let hls = null;
+
+// پاككردنەوەی داتای كۆن
+['ztv_channels_v2','ztv_channels_v3','ztv_ch_v4','ztv_favorites_v2','ztv_favorites_v3','ztv_fav_v4']
+  .forEach(k=>localStorage.removeItem(k));
+
+// ══ PAGES ══
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('p-'+p).classList.add('active');
+  document.getElementById('nav-'+p).classList.add('active');
+  if(p==='admin') buildAdminList();
+}
+
+// ══ SEARCH & FILTER ══
+function setCat(cat, btn){
+  activeCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function renderGrid(){
+  const q = (document.getElementById('search-input').value||'').toLowerCase();
+  const list = channels.filter(ch=>{
+    const matchQ = (ch.nameKu||'').includes(q)||(ch.name||'').toLowerCase().includes(q)||(ch.country||'').toLowerCase().includes(q);
+    const matchCat = activeCat==='All'||ch.cat===activeCat;
+    return matchQ&&matchCat;
+  });
+  const grid = document.getElementById('main-grid');
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-state">
+      <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+      <p>کەناڵ نەدۆزرایەوە</p></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(ch=>{
+    const isFav = favs.includes(ch.id);
+    const init = (ch.name||'TV').substring(0,2).toUpperCase();
+    const logoTag = ch.logo
+      ? `<img class="ch-logo" src="${ch.logo}" alt="${ch.name}" onerror="this.style.display='none';this.nextSibling.style.display='block'" referrerpolicy="no-referrer"><span class="ch-initial" style="display:none">${init}</span>`
+      : `<span class="ch-initial">${init}</span>`;
+    return `
+      <div class="ch-card" onclick="openPlayer('${ch.id}')">
+        <div class="ch-img-box">
+          ${logoTag}
+          ${ch.live?'<div class="live-tag"><span class="dot"></span>LIVE</div>':''}
+          <button class="fav-btn ${isFav?'active':''}" onclick="toggleFav('${ch.id}',event)" title="دڵخواز">♥</button>
+        </div>
+        <div class="ch-info">
+          <div class="ch-name">${ch.nameKu||ch.name}</div>
+          <span class="ch-cat">${catLabel(ch.cat)}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function catLabel(c){
+  return {All:'هەمووی',News:'هەواڵ',Sports:'وەرزش',Movies:'فیلم',Music:'موزیک',Kids:'منداڵان',General:'گشتی'}[c]||c;
+}
+
+// ══ FAVORITES ══
+function toggleFav(id, e){
+  e.stopPropagation();
+  favs = favs.includes(id)?favs.filter(f=>f!==id):[...favs,id];
+  localStorage.setItem('ztv_favs',JSON.stringify(favs));
+  renderGrid();
+}
+
+// ══ PLAYER ══
+function openPlayer(id){
+  const ch = channels.find(c=>c.id===id);
+  if(!ch) return;
+  const modal = document.getElementById('player-modal');
+  modal.style.display='flex';
+  document.getElementById('modal-title').textContent = ch.nameKu||ch.name;
+  document.getElementById('modal-meta').textContent = `${catLabel(ch.cat)} · ${ch.country||''}`;
+  document.getElementById('vid-err').style.display='none';
+  document.getElementById('vid-spinner').classList.remove('hide');
+  const vid = document.getElementById('vid');
+  vid.pause(); if(hls){hls.destroy();hls=null;} vid.src='';
+  if(!ch.src){ showErr(); return; }
+  if(Hls.isSupported()){
+    hls = new Hls({enableWorker:true,lowLatencyMode:true,maxLoadingDelay:10,manifestLoadingMaxRetry:1,fragLoadingMaxRetry:2});
+    hls.loadSource(ch.src);
+    hls.attachMedia(vid);
+    hls.on(Hls.Events.MANIFEST_PARSED,()=>{
+      vid.play().catch(()=>{});
+      document.getElementById('vid-spinner').classList.add('hide');
+    });
+    hls.on(Hls.Events.ERROR,(_,d)=>{ if(d.fatal){ document.getElementById('vid-spinner').classList.add('hide'); showErr(); } });
+  } else if(vid.canPlayType('application/vnd.apple.mpegurl')){
+    vid.src=ch.src; vid.load();
+    vid.onloadedmetadata=()=>{ vid.play().catch(()=>{}); document.getElementById('vid-spinner').classList.add('hide'); };
+    vid.onerror=()=>{ document.getElementById('vid-spinner').classList.add('hide'); showErr(); };
+  } else { showErr(); }
+}
+
+function showErr(){
+  document.getElementById('vid-spinner').classList.add('hide');
+  document.getElementById('vid-err').style.display='flex';
+}
+
+function closePlayer(){
+  document.getElementById('player-modal').style.display='none';
+  const vid=document.getElementById('vid');
+  vid.pause(); if(hls){hls.destroy();hls=null;} vid.src='';
+}
+document.getElementById('player-modal').addEventListener('click',function(e){ if(e.target===this) closePlayer(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closePlayer(); });
+
+// ══ ADMIN ══
+function buildAdminList(){
+  document.getElementById('admin-list').innerHTML = channels.map(ch=>`
+    <div class="admin-ch-item">
+      <span class="admin-ch-name">${ch.nameKu||ch.name}</span>
+      <button class="btn-del" onclick="delChannel('${ch.id}')">سڕینەوە</button>
+    </div>`).join('');
+}
+
+function addChannel(){
+  const nameKu=document.getElementById('a-nameKu').value.trim();
+  const name=document.getElementById('a-name').value.trim();
+  const src=document.getElementById('a-src').value.trim();
+  if(!nameKu||!name||!src){ alert('تکایە هەموو خانەکانی پێویست پڕبکەرەوە!'); return; }
+  const ch={
+    id:'c_'+Math.random().toString(36).substr(2,7),
+    nameKu,name,
+    cat:document.getElementById('a-cat').value,
+    country:document.getElementById('a-country').value||'Kurdistan',
+    live:true,color:'#7c3aed',
+    logo:document.getElementById('a-logo').value.trim(),
+    src
+  };
+  channels=[ch,...channels];
+  ['a-nameKu','a-name','a-country','a-src','a-logo'].forEach(i=>document.getElementById(i).value='');
+  buildAdminList(); renderGrid();
+  alert('کەناڵەکە زیادکرا! ✓');
+}
+
+function delChannel(id){
+  if(!confirm('دڵنیایت لە سڕینەوە؟')) return;
+  channels=channels.filter(c=>c.id!==id);
+  buildAdminList(); renderGrid();
+}
+
+// ══ INIT ══
+renderGrid();
+</script>
+</body>
+</html>
